@@ -1,5 +1,14 @@
 {
-    "tasks": [
-    {"id": 756, "title" : "Hacer el Tp de Vue", "isFav": true},
-    {"id": 789, "title": "Estudiar Programación 3", "isFav": false}
-  ]}
+  "tasks": [
+    {
+      "id": 756,
+      "title": "Hacer el Tp de Vue",
+      "isFav": true
+    },
+    {
+      "title": "terminar de lavar los platos",
+      "isFav": true,
+      "id": 8059
+    }
+  ]
+}
