@@ -1,70 +1,48 @@
 <template>
-   
-  <div>
-    <div v-for="list in lista" :key="list.id">
-        <p>
-            {{ list.nombrePelicula }}
-        </p>
-       
-    </div>
-    <button @click="cargarPeliculas">Cargar Data</button>
-    <div>
-        <input v-model="moovie.nombrePelicula" placeholder="moovie's name" >
-        <input v-model="moovie.id" placeholder="moovie's id" >
-        <button @click="sendData"> Enviar data </button>
-    </div>
+  <main>
+    <header><h1>Tareas</h1></header>
+
     
-  </div>
+   
+
+    <nav class="filter">
+        <button @click="filter = 'all'">Todas las tareas</button>
+    <button @click="filter = 'favourites'">Favoritas</button>
+    </nav>
+    
+    <div class="task-list" v-if="filter === 'all'">
+        <p> Tenes {{ taskStore.totalTasks }} tareas para hacer </p>
+      <div v-for="task in taskStore.tasks" :key="task.id">
+        <TareaDetalle :task="task" />
+      </div>
+    </div>
+
+    
+
+    <div class="task-list" v-if="filter === 'favourites'">
+        <p> Hay {{ taskStore.favCount }} tareas favoritas</p>
+      <div v-for="task in taskStore.favourites" :key="task.id">
+        <TareaDetalle :task="task" />
+      </div>
+    </div>
+  </main>
 </template>
 
 <script>
-import axios from 'axios'
-import listaService from '../service/listaService'
+import { ref } from 'vue';
+import { useTaskStore } from "../stores/taskStore";
+import TareaDetalle from "./TareaDetalle.vue";
 
 export default {
-    data(){
-        return{
-            lista :[],
-            error : '',
-            moovie : {
-                nombrePelicula : "",
-                id : 0
-            }
-        }
-    },
-    //mounted(){
-      //  this.cargarPeliculas()
-    
-    methods : {
-        async cargarPeliculas(){
-            try{
-                this.lista = await listaService.loadMoovies();         
+  components: { TareaDetalle },
+  setup() {
+    const taskStore = useTaskStore();
 
-            }catch(e){
-                this.error = "no se pudo"
-                console.log(this.error);
-            }
-            
-        },
-        async sendData(){
-            
-            try{
-                await listaService.sendMoovie(this.moovie)
-                this.cargarPeliculas()
-                this.pelicula={}
-            }catch(e){
-                console.log(e.message);
-            }
-            this.moovie = {}
-        },
-        addPelicula(){
-            this.lista.push(this.pelicula)
-            this.pelicula = {}
-            console.log(this.lista);
-        }
-    }
+    const filter = ref('all')
 
-}
+    return { taskStore, filter };
+  }
+};
 </script>
 
 <style>
