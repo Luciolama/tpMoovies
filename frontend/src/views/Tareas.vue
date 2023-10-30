@@ -2,6 +2,9 @@
   <main>
     <header><h1>Tareas</h1></header>
 
+    <div class="new-task-form">
+      <FormTarea/>
+    </div>
     
    
 
@@ -10,6 +13,9 @@
     <button @click="filter = 'favourites'">Favoritas</button>
     </nav>
     
+    <div class="loading" v-if="taskStore.loading"> Cargando...</div>
+
+
     <div class="task-list" v-if="filter === 'all'">
         <p> Tenes {{ taskStore.totalTasks }} tareas para hacer </p>
       <div v-for="task in taskStore.tasks" :key="task.id">
@@ -31,12 +37,15 @@
 <script>
 import { ref } from 'vue';
 import { useTaskStore } from "../stores/taskStore";
+import FormTarea from './FormTarea.vue';
 import TareaDetalle from "./TareaDetalle.vue";
 
 export default {
-  components: { TareaDetalle },
+  components: { TareaDetalle, FormTarea },
   setup() {
     const taskStore = useTaskStore();
+
+    taskStore.getTasks()  
 
     const filter = ref('all')
 
